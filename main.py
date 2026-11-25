@@ -20,10 +20,18 @@ ENTRY = (
 )
 
 
+def validate(text: str) -> str:
+    """Gate: 1-400 chars, non-blank, single line, ends with a period."""
+    body = text.strip()
+    assert 1 <= len(body) <= 400, f"entry is {len(body)} chars, must be 1-400"
+    assert body, "entry must not be only whitespace"
+    assert "\n" not in body, "entry must be a single line"
+    assert body.endswith("."), "entry must end with a period"
+    return body
+
+
 def main() -> None:
-    text = ENTRY
-    assert 1 <= len(text) <= 400, f"entry is {len(text)} chars, must be 1-400"
-    assert text.strip(), "entry must not be only whitespace"
+    text = validate(ENTRY)
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
